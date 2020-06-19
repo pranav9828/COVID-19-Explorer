@@ -11,6 +11,7 @@ import com.corona.covid_19explorer.Fragments.IdeasFragment;
 import com.corona.covid_19explorer.Fragments.LocationFragment;
 import com.corona.covid_19explorer.Fragments.NewsFragment;
 import com.corona.covid_19explorer.Fragments.PreventFragment;
+import com.corona.covid_19explorer.Fragments.StatesFragment;
 import com.corona.covid_19explorer.R;
 import com.google.android.material.navigation.NavigationView;
 
@@ -88,6 +89,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 getSupportActionBar().setTitle("Share your Location");
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LocationFragment()).commit();
                 break;
+            case R.id.nav_states:
+                getSupportActionBar().setTitle("Track states");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StatesFragment()).commit();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

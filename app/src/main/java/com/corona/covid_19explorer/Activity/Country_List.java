@@ -38,41 +38,41 @@ public class Country_List extends AppCompatActivity {
         reff = firebaseDatabase.getReference().child("country");
         time = firebaseDatabase.getReference().child("timestamp");
         countries = new ArrayList<>();
-        adapter = new ArrayAdapter<>(Country_List.this, R.layout.country_info, R.id.country_info_list, countries);
+        adapter = new ArrayAdapter<>(Country_List.this, R.layout.country_info, R.id.country_name, countries);
         timestamp = (TextView) findViewById(R.id.timestamp);
 
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        reff.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    country = ds.getValue(Country.class);
-                    countries.add("Country:" + "\t" + country.getName().toString() + "\n" + "Total Cases:" + "\t" + country.getTotal() + "\n" + "New Cases:" + "\t" + country.getNewCases() + "\n" + "Total Deaths:" + "\t" + country.getTotalDeaths() + "\n" + "New Deaths:" + "\t" + country.getNewCases() + "\n" + "Total Recovered:" + "\t" + country.getTotalRecovered() + "\n" + "Active Cases:" + "\t" + country.getActiveCases() + "\n" + "Serious Cases:" + "\t" + country.getSeriousCases());
-                }
-                listView.setAdapter(adapter);
-            }
+//        reff.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot ds: dataSnapshot.getChildren()){
+//                    country = ds.getValue(Country.class);
+//                    countries.add("Country:" + "\t" + country.getName().toString() + "\n" + "Total Cases:" + "\t" + country.getTotal() + "\n" + "New Cases:" + "\t" + country.getNewCases() + "\n" + "Total Deaths:" + "\t" + country.getTotalDeaths() + "\n" + "New Deaths:" + "\t" + country.getNewCases() + "\n" + "Total Recovered:" + "\t" + country.getTotalRecovered() + "\n" + "Active Cases:" + "\t" + country.getActiveCases() + "\n" + "Serious Cases:" + "\t" + country.getSeriousCases());
+//                }
+//                listView.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        time.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String day = dataSnapshot.child("date").getValue().toString();
-                timestamp.setText(day);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        time.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                String day = dataSnapshot.child("date").getValue().toString();
+//                timestamp.setText(day);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
     }
 

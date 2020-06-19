@@ -23,13 +23,17 @@ import com.corona.covid_19explorer.R;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.charts.ValueLineChart;
 import org.eazegraph.lib.models.PieModel;
+import org.eazegraph.lib.models.ValueLinePoint;
+import org.eazegraph.lib.models.ValueLineSeries;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public class HomeFragment extends Fragment {
 
-    TextView recoveredNumber, confirmedNumber, deathNumber, activeNumber;
+    TextView recoveredNumber, confirmedNumber, deathNumber, activeNumber,greeting;
     PieChart pieChart;
     ValueLineChart valueLineChart;
     @Nullable
@@ -40,16 +44,60 @@ public class HomeFragment extends Fragment {
         confirmedNumber = (TextView) view.findViewById(R.id.confirmed_num);
         deathNumber = (TextView) view.findViewById(R.id.death_num);
         activeNumber = (TextView) view.findViewById(R.id.active_num);
-
+        greeting = (TextView) view.findViewById(R.id.greeting);
         pieChart = view.findViewById(R.id.pieChart);
         valueLineChart = view.findViewById(R.id.lineChart);
 
+        Calendar calendar = Calendar.getInstance();
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hours >= 12 && hours < 16){
+            greeting.setText("Good Afternoon");
+        }
+        else if(hours >= 16){
+            greeting.setText("Good Evening");
+        }
+        else if (hours >= 5 && hours < 12){
+            greeting.setText("Good Morning");
+        }
+
         fetchData();
+        visualizeData();
         return view;
     }
 
+    private void visualizeData() {
+        String url = "https://api.covid19api.com/dayone/country/india";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    for (int i = 0; i<jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String confirmed = jsonObject.getString("Confirmed");
+                        String date = jsonObject.getString("Date");
+
+                        ValueLineSeries series = new ValueLineSeries();
+                        series.setColor(0xFF56B7F1);
+
+                        series.addPoint(new ValueLinePoint(date, Float.parseFloat(confirmed)));
+                        valueLineChart.addSeries(series);
+                        valueLineChart.startAnimation();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
     private void fetchData() {
-        String url = "https://corona.lmao.ninja/v2/all";
+        String url = "https://disease.sh/v2/countries/IND?yesterday=false&strict=false";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -80,4 +128,5 @@ public class HomeFragment extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
     }
+
 }

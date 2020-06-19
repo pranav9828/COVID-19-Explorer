@@ -1,20 +1,16 @@
 package com.corona.covid_19explorer.Classes;
 
 public class Country {
-    private String name;
-    private long total, newCases, totalDeaths, newDeaths, totalRecovered, activeCases, seriousCases;
+    private String name,total, death, cured, active;
 
     public Country() {}
 
-    public Country(String name, long total, long newCases, long totalDeaths, long newDeaths, long totalRecovered, long activeCases, long seriousCases) {
+    public Country(String name, String total, String death, String cured, String active) {
         this.name = name;
         this.total = total;
-        this.newCases = newCases;
-        this.totalDeaths = totalDeaths;
-        this.newDeaths = newDeaths;
-        this.totalRecovered = totalRecovered;
-        this.activeCases = activeCases;
-        this.seriousCases = seriousCases;
+        this.death = death;
+        this.cured = cured;
+        this.active = active;
     }
 
     public String getName() {
@@ -25,59 +21,35 @@ public class Country {
         this.name = name;
     }
 
-    public long getTotal() {
+    public String getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(String total) {
         this.total = total;
     }
 
-    public long getNewCases() {
-        return newCases;
+    public String getDeath() {
+        return death;
     }
 
-    public void setNewCases(long newCases) {
-        this.newCases = newCases;
+    public void setDeath(String death) {
+        this.death = death;
     }
 
-    public long getTotalDeaths() {
-        return totalDeaths;
+    public String getCured() {
+        return cured;
     }
 
-    public void setTotalDeaths(long totalDeaths) {
-        this.totalDeaths = totalDeaths;
+    public void setCured(String cured) {
+        this.cured = cured;
     }
 
-    public long getNewDeaths() {
-        return newDeaths;
+    public String getActive() {
+        return active;
     }
 
-    public void setNewDeaths(long newDeaths) {
-        this.newDeaths = newDeaths;
-    }
-
-    public long getTotalRecovered() {
-        return totalRecovered;
-    }
-
-    public void setTotalRecovered(long totalRecovered) {
-        this.totalRecovered = totalRecovered;
-    }
-
-    public long getActiveCases() {
-        return activeCases;
-    }
-
-    public void setActiveCases(long activeCases) {
-        this.activeCases = activeCases;
-    }
-
-    public long getSeriousCases() {
-        return seriousCases;
-    }
-
-    public void setSeriousCases(long seriousCases) {
-        this.seriousCases = seriousCases;
+    public void setActive(String active) {
+        this.active = active;
     }
 }

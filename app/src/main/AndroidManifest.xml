@@ -21,12 +21,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.CountryDetail"
+            android:parentActivityName=".Activity.Country_List"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
             android:name=".Activity.HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
         <activity
             android:name=".Activity.Donations"
             android:parentActivityName=".Activity.Dashboard"
@@ -37,7 +41,10 @@
             android:parentActivityName=".Activity.Dashboard"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".Activity.NewsDetail" />
+        <activity android:name=".Activity.NewsDetail"
+            android:parentActivityName=".Activity.CoronaNews"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
