@@ -1,79 +1,85 @@
 package com.corona.covid_19explorer.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.corona.covid_19explorer.Adapter.CountryAdapter;
 import com.corona.covid_19explorer.Classes.Country;
 import com.corona.covid_19explorer.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Country_List extends AppCompatActivity {
 
-    ListView listView;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference reff;
-    DatabaseReference time;
-    ArrayList<String> countries;
-    ArrayAdapter<String> adapter;
-    Country country;
-    TextView timestamp;
+    RecyclerView recyclerView;
+    List<Country> countryList;
+    CountryAdapter countryAdapter;
+    JsonObjectRequest jsonObjectRequest;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_country__list);
-        listView = (ListView) findViewById(R.id.listView);
-        country = new Country();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        reff = firebaseDatabase.getReference().child("country");
-        time = firebaseDatabase.getReference().child("timestamp");
-        countries = new ArrayList<>();
-        adapter = new ArrayAdapter<>(Country_List.this, R.layout.country_info, R.id.country_name, countries);
-        timestamp = (TextView) findViewById(R.id.timestamp);
-
+        recyclerView = findViewById(R.id.country_list);
+        countryList = new ArrayList<>();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+        fetchData();
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-//        reff.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot ds: dataSnapshot.getChildren()){
-//                    country = ds.getValue(Country.class);
-//                    countries.add("Country:" + "\t" + country.getName().toString() + "\n" + "Total Cases:" + "\t" + country.getTotal() + "\n" + "New Cases:" + "\t" + country.getNewCases() + "\n" + "Total Deaths:" + "\t" + country.getTotalDeaths() + "\n" + "New Deaths:" + "\t" + country.getNewCases() + "\n" + "Total Recovered:" + "\t" + country.getTotalRecovered() + "\n" + "Active Cases:" + "\t" + country.getActiveCases() + "\n" + "Serious Cases:" + "\t" + country.getSeriousCases());
-//                }
-//                listView.setAdapter(adapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+    private void fetchData() {
+        String url = "http://covid19-india-adhikansh.herokuapp.com/states";
 
-//        time.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                String day = dataSnapshot.child("date").getValue().toString();
-//                timestamp.setText(day);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.optJSONArray("state");
+                    for (int i=0;i<jsonArray.length(); i++){
+                        Country country = new Country();
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        country.setName(jsonObject.getString("name"));
+                        country.setTotal(jsonObject.getString("total"));
+                        country.setDeath(jsonObject.getString("death"));
+                        country.setCured(jsonObject.getString("cured"));
+                        country.setActive(jsonObject.getString("active"));
+                        countryList.add(country);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+                countryAdapter = new CountryAdapter(Country_List.this, countryList);
+                recyclerView.setLayoutManager(new LinearLayoutManager(Country_List.this));
+                recyclerView.setAdapter(countryAdapter);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(Country_List.this);
+        requestQueue.add(jsonObjectRequest);
     }
 
 }

@@ -1,10 +1,12 @@
 package com.corona.covid_19explorer.Fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.corona.covid_19explorer.Activity.Country_List;
 import com.corona.covid_19explorer.R;
 
 import org.eazegraph.lib.charts.PieChart;
@@ -35,7 +38,7 @@ public class HomeFragment extends Fragment {
 
     TextView recoveredNumber, confirmedNumber, deathNumber, activeNumber,greeting;
     PieChart pieChart;
-    ValueLineChart valueLineChart;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +49,6 @@ public class HomeFragment extends Fragment {
         activeNumber = (TextView) view.findViewById(R.id.active_num);
         greeting = (TextView) view.findViewById(R.id.greeting);
         pieChart = view.findViewById(R.id.pieChart);
-        valueLineChart = view.findViewById(R.id.lineChart);
 
         Calendar calendar = Calendar.getInstance();
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
@@ -61,41 +63,8 @@ public class HomeFragment extends Fragment {
         }
 
         fetchData();
-        visualizeData();
         return view;
     }
-
-    private void visualizeData() {
-        String url = "https://api.covid19api.com/dayone/country/india";
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for (int i = 0; i<jsonArray.length(); i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String confirmed = jsonObject.getString("Confirmed");
-                        String date = jsonObject.getString("Date");
-
-                        ValueLineSeries series = new ValueLineSeries();
-                        series.setColor(0xFF56B7F1);
-
-                        series.addPoint(new ValueLinePoint(date, Float.parseFloat(confirmed)));
-                        valueLineChart.addSeries(series);
-                        valueLineChart.startAnimation();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-    }
-
     private void fetchData() {
         String url = "https://disease.sh/v2/countries/IND?yesterday=false&strict=false";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

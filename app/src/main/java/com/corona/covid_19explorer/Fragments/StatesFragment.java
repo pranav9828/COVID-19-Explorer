@@ -1,5 +1,6 @@
 package com.corona.covid_19explorer.Fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,18 +38,22 @@ public class StatesFragment extends Fragment {
     Country country;
     CountryAdapter countryAdapter;
     JsonObjectRequest jsonObjectRequest;
+    ProgressDialog progressDialog;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_states, container, false);
         recyclerView = view.findViewById(R.id.country_list);
         countryList = new ArrayList<>();
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
         fetchData();
         return view;
     }
 
     private void fetchData() {
-        String url = "http://covid19-india-adhikansh.herokuapp.com/states";
+        String url = "https://covid19-india-adhikansh.herokuapp.com/states";
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -68,6 +73,7 @@ public class StatesFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                progressDialog.dismiss();
                 countryAdapter = new CountryAdapter(getContext(), countryList);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(countryAdapter);
