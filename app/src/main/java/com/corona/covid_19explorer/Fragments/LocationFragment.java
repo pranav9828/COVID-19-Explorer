@@ -70,8 +70,7 @@ public class LocationFragment extends Fragment {
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_INT);
-                        return;
+//                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_INT);
                     }
                     LocationServices.getFusedLocationProviderClient(getContext()).requestLocationUpdates(locationRequest, new LocationCallback(){
 
@@ -118,8 +117,7 @@ public class LocationFragment extends Fragment {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_INT);
-            return;
+//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_INT);
         }
         LocationServices.getFusedLocationProviderClient(getContext()).requestLocationUpdates(locationRequest, new LocationCallback(){
 
@@ -165,4 +163,5 @@ public class LocationFragment extends Fragment {
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
 }

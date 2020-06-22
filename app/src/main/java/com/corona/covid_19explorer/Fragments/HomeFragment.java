@@ -1,6 +1,11 @@
 package com.corona.covid_19explorer.Fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.corona.covid_19explorer.Classes.ConnectivityReceiver;
 import com.corona.covid_19explorer.R;
 
 import org.eazegraph.lib.charts.PieChart;
@@ -26,7 +32,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
 
     TextView recoveredNumber, confirmedNumber, deathNumber, activeNumber,greeting;
     PieChart pieChart;
@@ -57,6 +63,7 @@ public class HomeFragment extends Fragment {
         fetchData();
         return view;
     }
+
     private void fetchData() {
         String url = "https://disease.sh/v2/countries/IND?yesterday=false&strict=false";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -89,5 +96,4 @@ public class HomeFragment extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
     }
-
 }
